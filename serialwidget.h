@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSerialPort>
+#include "comboboxupdateeventfilter.h"
 
 namespace Ui {
 class SerialWidget;
@@ -18,10 +19,12 @@ public:
 
 public slots:
     void changeState();
+    void updatePortInfo();
 
 private:
     Ui::SerialWidget *ui;
     QSerialPort serialPort;
+    ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;
 };
 
 #endif // SERIALWIDGET_H
