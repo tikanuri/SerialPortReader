@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QMap>
+#include <QMetaEnum>
 #include "comboboxupdateeventfilter.h"
 
 namespace Ui {
@@ -22,9 +25,18 @@ public slots:
     void updatePortInfo();
 
 private:
+    void initMetaEnum();
+
+
+private:
     Ui::SerialWidget *ui;
     QSerialPort serialPort;
     ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;
+    QMap<QString,QSerialPortInfo> portInfoMap;
+    QMetaEnum enumBaudrate;
+    QMetaEnum enumParity;
+    QMetaEnum enumStopBits;
+    QMetaEnum enumDataBits;
 };
 
 #endif // SERIALWIDGET_H

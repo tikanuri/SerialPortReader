@@ -6,13 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>449</height>
+    <width>679</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout"/>
  </widget>
  <resources/>
  <connections/>
