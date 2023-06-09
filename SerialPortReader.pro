@@ -12,11 +12,13 @@ SOURCES += \
     comboboxupdateeventfilter.cpp \
     main.cpp \
     serialwidget.cpp \
+    utils.cpp \
     widget.cpp
 
 HEADERS += \
     comboboxupdateeventfilter.h \
     serialwidget.h \
+    utils.h \
     widget.h
 
 FORMS += \
