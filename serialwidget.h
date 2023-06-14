@@ -6,6 +6,7 @@
 #include <QSerialPortInfo>
 #include <QMap>
 #include <QMetaEnum>
+#include <QPushButton>
 #include "comboboxupdateeventfilter.h"
 
 namespace Ui {
@@ -17,12 +18,18 @@ class SerialWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SerialWidget(QWidget *parent = nullptr);
+    explicit SerialWidget(bool visibleMinusButton, QWidget *parent = nullptr);
     ~SerialWidget();
+    QPushButton *getPlusButton();
+    QPushButton *getMinusButton();
 
 public slots:
     void changeState();
     void updatePortInfo();
+
+signals:
+    void clickedPlus();
+    void clickedMinus();
 
 private:
     void initMetaEnum();

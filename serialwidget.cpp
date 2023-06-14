@@ -2,7 +2,7 @@
 #include "ui_serialwidget.h"
 #include "utils.h"
 
-SerialWidget::SerialWidget(QWidget *parent) :
+SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
     serialPort(this),
@@ -10,6 +10,10 @@ SerialWidget::SerialWidget(QWidget *parent) :
     portInfoMap()
 {
     ui->setupUi(this);
+    ui->pushButtonMinus->setVisible(visibleMinusButton);
+    qDebug() << "Constructor:  " << (uint64_t)this;
+    connect(ui->pushButtonPlus, &QPushButton::clicked, this, [=](){emit clickedPlus();});
+    connect(ui->pushButtonMinus, &QPushButton::clicked, this, [=](){emit clickedMinus();});
 
     ui->comboBoxPort->installEventFilter(&comboBoxUpdateEventFilter);
     connect(&comboBoxUpdateEventFilter,&ComboBoxUpdateEventFilter::clicked,this,&SerialWidget::updatePortInfo);
@@ -21,10 +25,12 @@ SerialWidget::SerialWidget(QWidget *parent) :
     updatePortInfo();
     initMetaEnum();
 
+
 }
 
 SerialWidget::~SerialWidget()
 {
+    qDebug() << "Destructor:  " << (uint64_t)this;
     delete ui;
 }
 
@@ -99,4 +105,14 @@ void SerialWidget::initMetaEnum()
     enumToQCombobox<QSerialPort::StopBits>(ui->comboBoxStop, enumStopBits);
     enumToQCombobox<QSerialPort::DataBits>(ui->comboBoxBits, enumDataBits);
     ui->comboBoxBits->setCurrentText(QString(enumDataBits.valueToKey(QSerialPort::Data8)));
+}
+
+QPushButton *SerialWidget::getPlusButton()
+{
+    return ui->pushButtonPlus;
+}
+
+QPushButton *SerialWidget::getMinusButton()
+{
+    return ui->pushButtonMinus;
 }
