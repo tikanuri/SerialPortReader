@@ -21,11 +21,10 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     connect(ui->pushButtonStart,&QPushButton::clicked,this,&SerialWidget::changeState);
     ui->comboBoxBaudrate->setEditable(true);
 
+    connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
 
     updatePortInfo();
     initMetaEnum();
-
-
 }
 
 SerialWidget::~SerialWidget()
@@ -56,8 +55,9 @@ void SerialWidget::changeState()
         if(serialPort.open(QIODeviceBase::ReadWrite))
         {
             ui->pushButtonStart->setText("Stop");
-            ui->debugInfo->setText(QString("Open: %0 %1 %2 %3")
+            ui->debugInfo->setText(QString("Open: %0 %1; %2 %3 %4")
                                    .arg(ui->comboBoxPort->currentText())
+                                   .arg(ui->comboBoxBaudrate->currentText())
                                    .arg(dbits)
                                    .arg(enumParity.valueToKey(parity))
                                    .arg(sbits)
@@ -90,8 +90,6 @@ void SerialWidget::updatePortInfo()
     }
 }
 
-
-
 void SerialWidget::initMetaEnum()
 {
     enumBaudrate = QMetaEnum::fromType<QSerialPort::BaudRate>();
@@ -115,4 +113,10 @@ QPushButton *SerialWidget::getPlusButton()
 QPushButton *SerialWidget::getMinusButton()
 {
     return ui->pushButtonMinus;
+}
+
+void SerialWidget::read()
+{
+    QByteArray ba = serialPort.readAll();
+
 }

@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     comboboxupdateeventfilter.cpp \
     main.cpp \
+    serialmodel.cpp \
     serialwidget.cpp \
     utils.cpp \
     widget.cpp
 
 HEADERS += \
     comboboxupdateeventfilter.h \
+    serialmodel.h \
     serialwidget.h \
     utils.h \
     widget.h

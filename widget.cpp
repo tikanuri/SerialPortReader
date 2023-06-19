@@ -7,14 +7,11 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
     , splitter(new QSplitter(Qt::Orientation::Horizontal,this))
-    , baseSerialWidget(new SerialWidget(false,this))
 {
     ui->setupUi(this);
     this->setWindowTitle("SerialPort");
 
-    listSerialWidget.append(baseSerialWidget);
-    baseSerialWidget->setObjectName("baseSerialWidget");
-
+    SerialWidget *baseSerialWidget = new SerialWidget(false,this);
     ui->horizontalLayout->addWidget(splitter);
     splitter->addWidget(baseSerialWidget);
     connect(baseSerialWidget, &SerialWidget::clickedPlus, this, &Widget::newSerialWidget);

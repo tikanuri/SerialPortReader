@@ -26,6 +26,7 @@ public:
 public slots:
     void changeState();
     void updatePortInfo();
+    void read();
 
 signals:
     void clickedPlus();
@@ -33,7 +34,6 @@ signals:
 
 private:
     void initMetaEnum();
-
 
 private:
     Ui::SerialWidget *ui;

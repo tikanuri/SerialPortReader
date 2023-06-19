@@ -25,7 +25,5 @@ private slots:
 private:
     Ui::Widget *ui;
     QSplitter *splitter;
-    SerialWidget *baseSerialWidget;
-    QList<SerialWidget*> listSerialWidget;
 };
 #endif // WIDGET_H
