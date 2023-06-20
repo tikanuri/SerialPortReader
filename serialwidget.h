@@ -8,6 +8,7 @@
 #include <QMetaEnum>
 #include <QPushButton>
 #include "comboboxupdateeventfilter.h"
+#include "serialmodel.h"
 
 namespace Ui {
 class SerialWidget;
@@ -37,6 +38,7 @@ private:
 
 private:
     Ui::SerialWidget *ui;
+    SerialModel *model;
     QSerialPort serialPort;
     ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;
     QMap<QString,QSerialPortInfo> portInfoMap;

@@ -5,6 +5,7 @@
 SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
+    model(new SerialModel(this)),
     serialPort(this),
     comboBoxUpdateEventFilter(this),
     portInfoMap()
@@ -21,7 +22,17 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     connect(ui->pushButtonStart,&QPushButton::clicked,this,&SerialWidget::changeState);
     ui->comboBoxBaudrate->setEditable(true);
 
-    connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
+    //connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
+    connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::read);
+
+    ui->tableView->setModel(model);
+    ui->tableView->resizeColumnToContents(0);
+    ui->tableView->setShowGrid(false);
+    ui->tableView->setWordWrap(false);
+    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+    ui->tableView->setColumnHidden(0,true);
+    //ui->tableView->verticalHeader()->show();
+    //ui->tableView->horizontalHeader()->hide();
 
     updatePortInfo();
     initMetaEnum();
@@ -31,6 +42,7 @@ SerialWidget::~SerialWidget()
 {
     qDebug() << "Destructor:  " << (uint64_t)this;
     delete ui;
+    delete model;
 }
 
 void SerialWidget::changeState()
@@ -117,6 +129,9 @@ QPushButton *SerialWidget::getMinusButton()
 
 void SerialWidget::read()
 {
-    QByteArray ba = serialPort.readAll();
-
+    //QByteArray ba = serialPort.readAll();
+    if(!ui->lineEditSend->text().isEmpty())
+    {
+        model->add(QDateTime::currentDateTime(), ui->lineEditSend->text().toUtf8());
+    }
 }

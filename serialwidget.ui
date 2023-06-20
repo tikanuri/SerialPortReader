@@ -213,7 +213,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QColumnView" name="columnViewOutput"/>
+    <widget class="QTableView" name="tableView"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
