@@ -13,8 +13,8 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     ui->setupUi(this);
     ui->pushButtonMinus->setVisible(visibleMinusButton);
     qDebug() << "Constructor:  " << (uint64_t)this;
-    connect(ui->pushButtonPlus, &QPushButton::clicked, this, [=](){emit clickedPlus();});
-    connect(ui->pushButtonMinus, &QPushButton::clicked, this, [=](){emit clickedMinus();});
+    connect(ui->pushButtonPlus, &QPushButton::clicked, this, [&](){emit clickedPlus();});
+    connect(ui->pushButtonMinus, &QPushButton::clicked, this, [&](){emit clickedMinus();});
 
     ui->comboBoxPort->installEventFilter(&comboBoxUpdateEventFilter);
     connect(&comboBoxUpdateEventFilter,&ComboBoxUpdateEventFilter::clicked,this,&SerialWidget::updatePortInfo);
@@ -24,14 +24,21 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
 
     //connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
     connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::read);
+    connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
+        ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
+        ui->tableView->resizeColumnToContents(0);
+    });
+    connect(ui->checkBoxHex, &QCheckBox::stateChanged, this, [&](int state){
+        ui->tableView->setColumnHidden(2, !static_cast<bool>(state));
+    });
 
     ui->tableView->setModel(model);
-    ui->tableView->resizeColumnToContents(0);
     ui->tableView->setShowGrid(false);
     ui->tableView->setWordWrap(false);
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
     ui->tableView->setColumnHidden(0,true);
-    //ui->tableView->verticalHeader()->show();
+    ui->tableView->setColumnHidden(2,true);
+    ui->tableView->verticalHeader()->hide();
     //ui->tableView->horizontalHeader()->hide();
 
     updatePortInfo();
@@ -132,6 +139,6 @@ void SerialWidget::read()
     //QByteArray ba = serialPort.readAll();
     if(!ui->lineEditSend->text().isEmpty())
     {
-        model->add(QDateTime::currentDateTime(), ui->lineEditSend->text().toUtf8());
+        model->addSerialData(QDateTime::currentDateTime(), ui->lineEditSend->text().toUtf8());
     }
 }

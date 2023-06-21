@@ -29,7 +29,7 @@ void Widget::newSerialWidget()
     {
         qobject_cast<SerialWidget*>(sender())->getMinusButton()->show();
     }
-    if(splitter->count() < 5)
+    if(splitter->count() < COUNT_OF_SERIAL_WIDGET)
     {
         SerialWidget *sw = new SerialWidget(true,this);
         splitter->addWidget(sw);

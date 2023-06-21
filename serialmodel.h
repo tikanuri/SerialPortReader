@@ -13,7 +13,7 @@ class SerialModel : public QAbstractItemModel
 {
 
 private:
-    static constexpr int COLUMN_SIZE_MAX = 3;
+    static constexpr int COLUMN_SIZE = 3;
 
     struct SerialData
     {
@@ -40,7 +40,9 @@ public:
     bool hasChildren(const QModelIndex &parent) const override;
 
     //Custom
-    void add(const QDateTime &dt, const QByteArray & ba);
+public slots:
+    void addSerialData(const QDateTime &dt, const QByteArray & ba);
+    void clearSerialData();
 };
 
 #endif // SERIALMODEL_H

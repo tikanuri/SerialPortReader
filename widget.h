@@ -13,7 +13,7 @@ QT_END_NAMESPACE
 class Widget : public QWidget
 {
     Q_OBJECT
-
+    static constexpr int COUNT_OF_SERIAL_WIDGET = 4;
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();

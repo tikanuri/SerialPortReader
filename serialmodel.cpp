@@ -14,7 +14,7 @@ SerialModel::SerialModel(QObject *parent)
 int SerialModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return COLUMN_SIZE_MAX;
+    return COLUMN_SIZE;
 }
 
 int SerialModel::rowCount(const QModelIndex &parent) const
@@ -25,6 +25,10 @@ int SerialModel::rowCount(const QModelIndex &parent) const
 
 QVariant SerialModel::data(const QModelIndex &index, int role) const
 {
+    if(index.row() >= listData.length())
+    {
+        qDebug() << "Row: " << index.row();
+    }
     if(!index.isValid() || index.row()>=listData.length()
             || role!=Qt::DisplayRole)
     {
@@ -87,7 +91,7 @@ QVariant SerialModel::headerData(int section, Qt::Orientation orientation, int r
 QModelIndex SerialModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    if( !hasIndex(row,column,parent) )
+    if( !hasIndex(row,column) )
     {
         return QModelIndex();
     }
@@ -100,22 +104,26 @@ QModelIndex SerialModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
-void SerialModel::add(const QDateTime &dt, const QByteArray &ba)
+bool SerialModel::hasChildren(const QModelIndex &parent) const
 {
-    SerialData sd{dt, ba};
-    listData.append(sd);
-
+    Q_UNUSED(parent)
+    return false;
 }
 
-void SerialModel::setColumnFlags(const ColumnFlags &cf, const bool b)
+void SerialModel::addSerialData(const QDateTime &dt, const QByteArray &ba)
 {
-    if(b)
-    {
-        columnFlags = static_cast<ColumnFlags>(columnFlags | cf);
-    }
-    else
-    {
-        columnFlags = static_cast<ColumnFlags>(columnFlags & ~cf);
-    }
-
+    int l = listData.length();
+    this->beginInsertRows(QModelIndex(),l,l);
+    listData.append({dt,ba});
+    this->endInsertRows();
 }
+
+void SerialModel::clearSerialData()
+{
+    int l = listData.length()-1;
+    this->beginRemoveRows(QModelIndex(),0,l);
+    listData.clear();
+    this->endRemoveRows();
+}
+
+
