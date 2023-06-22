@@ -29,24 +29,36 @@ QVariant SerialModel::data(const QModelIndex &index, int role) const
     {
         qDebug() << "Row: " << index.row();
     }
-    if(!index.isValid() || index.row()>=listData.length()
-            || role!=Qt::DisplayRole)
+
+    if( !index.isValid() || index.row()>=listData.length() )
     {
         return QVariant();
     }
 
-    switch (index.column()) {
-    case 0:
-        return listData.at(index.row()).dateTime.toString("dd.MM hh:mm:ss:zzz");
+    SerialData &d = listData.at(index.row());
+    QString str(d.byteArray);
 
-    case 1:
-        return QString(listData.at(index.row()).byteArray);
+    switch (role) {
+    case Qt::DisplayRole:
+        switch (index.column()) {
+        case 0:
+            return d.dateTime.toString("dd.MM hh:mm:ss:zzz");
 
-    case 2:
-        return QString(listData.at(index.row()).byteArray.toHex(' '));
+        case 1:
+            return QString(d.byteArray);
 
-    default:
-        break;
+        case 2:
+            return QString(d.byteArray.toHex(' '));
+
+        default:
+            break;
+        }
+    case Qt::SizeHintRole:
+        case 1:
+            return QSize(0,30);
+        default:
+            return QSize();
+        }
     }
     return QVariant();
 }

@@ -13,17 +13,19 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     ui->setupUi(this);
     ui->pushButtonMinus->setVisible(visibleMinusButton);
     qDebug() << "Constructor:  " << (uint64_t)this;
+
     connect(ui->pushButtonPlus, &QPushButton::clicked, this, [&](){emit clickedPlus();});
     connect(ui->pushButtonMinus, &QPushButton::clicked, this, [&](){emit clickedMinus();});
 
+    //comboBox
     ui->comboBoxPort->installEventFilter(&comboBoxUpdateEventFilter);
     connect(&comboBoxUpdateEventFilter,&ComboBoxUpdateEventFilter::clicked,this,&SerialWidget::updatePortInfo);
-
-    connect(ui->pushButtonStart,&QPushButton::clicked,this,&SerialWidget::changeState);
     ui->comboBoxBaudrate->setEditable(true);
 
+    connect(ui->pushButtonStart,&QPushButton::clicked,this,&SerialWidget::changeState);
     //connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
     connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::read);
+    connect(ui->pushButtonClear, &QPushButton::clicked, model, &SerialModel::clearSerialData);
     connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
         ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
         ui->tableView->resizeColumnToContents(0);
