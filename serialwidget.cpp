@@ -2,15 +2,22 @@
 #include "ui_serialwidget.h"
 #include "utils.h"
 
-SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
+SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
+    //view(new SerialView(this)),
     model(new SerialModel(this)),
     serialPort(this),
     comboBoxUpdateEventFilter(this),
     portInfoMap()
 {
     ui->setupUi(this);
+
+    view = new SerialView(this);
+    view->setObjectName("SerialView");
+    //ui->verticalLayout->addWidget();
+    ui->verticalLayout->addWidget(view);
+
     ui->pushButtonMinus->setVisible(visibleMinusButton);
     qDebug() << "Constructor:  " << (uint64_t)this;
 
@@ -26,22 +33,22 @@ SerialWidget::SerialWidget(bool visibleMinusButton,QWidget *parent) :
     //connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
     connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::read);
     connect(ui->pushButtonClear, &QPushButton::clicked, model, &SerialModel::clearSerialData);
-    connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
-        ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
-        ui->tableView->resizeColumnToContents(0);
-    });
-    connect(ui->checkBoxHex, &QCheckBox::stateChanged, this, [&](int state){
-        ui->tableView->setColumnHidden(2, !static_cast<bool>(state));
-    });
+//    connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
+//        ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
+//        ui->tableView->resizeColumnToContents(0);
+//    });
+//    connect(ui->checkBoxHex, &QCheckBox::stateChanged, this, [&](int state){
+//        ui->tableView->setColumnHidden(2, !static_cast<bool>(state));
+//    });
 
-    ui->tableView->setModel(model);
-    ui->tableView->setShowGrid(false);
-    ui->tableView->setWordWrap(false);
-    ui->tableView->horizontalHeader()->setStretchLastSection(true);
-    ui->tableView->setColumnHidden(0,true);
-    ui->tableView->setColumnHidden(2,true);
-    ui->tableView->verticalHeader()->hide();
-    //ui->tableView->horizontalHeader()->hide();
+//    ui->tableView->setModel(model);
+//    ui->tableView->setShowGrid(false);
+//    ui->tableView->setWordWrap(false);
+//    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+//    ui->tableView->setColumnHidden(0,true);
+//    ui->tableView->setColumnHidden(2,true);
+//    ui->tableView->verticalHeader()->hide();
+//    ui->tableView->horizontalHeader()->hide();
 
     updatePortInfo();
     initMetaEnum();

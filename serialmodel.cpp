@@ -1,5 +1,6 @@
 #include "serialmodel.h"
 #include <QDateTime>
+#include <QSize>
 
 SerialModel::SerialModel(QObject *parent)
     : QAbstractItemModel{parent}
@@ -35,7 +36,7 @@ QVariant SerialModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    SerialData &d = listData.at(index.row());
+    const SerialData &d = listData.at(index.row());
     QString str(d.byteArray);
 
     switch (role) {
@@ -52,12 +53,6 @@ QVariant SerialModel::data(const QModelIndex &index, int role) const
 
         default:
             break;
-        }
-    case Qt::SizeHintRole:
-        case 1:
-            return QSize(0,30);
-        default:
-            return QSize();
         }
     }
     return QVariant();

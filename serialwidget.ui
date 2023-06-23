@@ -220,9 +220,6 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableView" name="tableView"/>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLineEdit" name="lineEditSend"/>

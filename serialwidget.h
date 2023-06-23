@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include "comboboxupdateeventfilter.h"
 #include "serialmodel.h"
+#include "serialview.h"
 
 namespace Ui {
 class SerialWidget;
@@ -38,6 +39,7 @@ private:
 
 private:
     Ui::SerialWidget *ui;
+    SerialView *view;
     SerialModel *model;
     QSerialPort serialPort;
     ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;

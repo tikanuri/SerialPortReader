@@ -12,6 +12,7 @@ SOURCES += \
     comboboxupdateeventfilter.cpp \
     main.cpp \
     serialmodel.cpp \
+    serialview.cpp \
     serialwidget.cpp \
     utils.cpp \
     widget.cpp
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     comboboxupdateeventfilter.h \
     serialmodel.h \
+    serialview.h \
     serialwidget.h \
     utils.h \
     widget.h
