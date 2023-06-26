@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout_0">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -105,7 +105,7 @@
       </widget>
      </item>
      <item row="0" column="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="horizontalLayoutButton">
        <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
@@ -168,7 +168,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_1">
      <item>
       <widget class="QCheckBox" name="checkBoxTime">
        <property name="text">
@@ -220,7 +220,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLineEdit" name="lineEditSend"/>
      </item>
@@ -237,7 +237,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="debugInfo">
        <property name="text">

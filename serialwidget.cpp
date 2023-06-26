@@ -5,7 +5,7 @@
 SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
-    //view(new SerialView(this)),
+    view(new SerialView(this)),
     model(new SerialModel(this)),
     serialPort(this),
     comboBoxUpdateEventFilter(this),
@@ -13,10 +13,10 @@ SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    view = new SerialView(this);
     view->setObjectName("SerialView");
-    //ui->verticalLayout->addWidget();
-    ui->verticalLayout->addWidget(view);
+    view->setModel(model);
+    ui->verticalLayout->insertWidget(2,view);
+
 
     ui->pushButtonMinus->setVisible(visibleMinusButton);
     qDebug() << "Constructor:  " << (uint64_t)this;
