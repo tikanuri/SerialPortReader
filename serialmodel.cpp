@@ -102,7 +102,7 @@ QModelIndex SerialModel::index(int row, int column, const QModelIndex &parent) c
     {
         return QModelIndex();
     }
-    return createIndex(row,column);
+    return createIndex(row,column,&listData[row]);
 }
 
 QModelIndex SerialModel::parent(const QModelIndex &child) const
