@@ -5,7 +5,6 @@
 SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
-    view(new SerialView(this)),
     model(new SerialModel(this)),
     serialPort(this),
     comboBoxUpdateEventFilter(this),
@@ -13,50 +12,61 @@ SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    view->setObjectName("SerialView");
-    view->setModel(model);
-    ui->verticalLayout->insertWidget(2,view);
-
-
-    ui->pushButtonMinus->setVisible(visibleMinusButton);
-    qDebug() << "Constructor:  " << (uint64_t)this;
-
-    connect(ui->pushButtonPlus, &QPushButton::clicked, this, [&](){emit clickedPlus();});
-    connect(ui->pushButtonMinus, &QPushButton::clicked, this, [&](){emit clickedMinus();});
-
-    //comboBox
+    //-- Combo Box --
     ui->comboBoxPort->installEventFilter(&comboBoxUpdateEventFilter);
     connect(&comboBoxUpdateEventFilter,&ComboBoxUpdateEventFilter::clicked,this,&SerialWidget::updatePortInfo);
     ui->comboBoxBaudrate->setEditable(true);
 
+    //-- Push Button
+    ui->pushButtonMinus->setVisible(visibleMinusButton);
+    connect(ui->pushButtonPlus, &QPushButton::clicked, this, [&](){emit clickedPlus();});
+    connect(ui->pushButtonMinus, &QPushButton::clicked, this, [&](){emit clickedMinus();});
     connect(ui->pushButtonStart,&QPushButton::clicked,this,&SerialWidget::changeState);
-    //connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
-    connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::read);
+    connect(ui->pushButtonSend, &QPushButton::clicked, this, &SerialWidget::write);
     connect(ui->pushButtonClear, &QPushButton::clicked, model, &SerialModel::clearSerialData);
-//    connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
-//        ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
-//        ui->tableView->resizeColumnToContents(0);
-//    });
-//    connect(ui->checkBoxHex, &QCheckBox::stateChanged, this, [&](int state){
-//        ui->tableView->setColumnHidden(2, !static_cast<bool>(state));
-//    });
 
-//    ui->tableView->setModel(model);
-//    ui->tableView->setShowGrid(false);
-//    ui->tableView->setWordWrap(false);
-//    ui->tableView->horizontalHeader()->setStretchLastSection(true);
-//    ui->tableView->setColumnHidden(0,true);
-//    ui->tableView->setColumnHidden(2,true);
-//    ui->tableView->verticalHeader()->hide();
-//    ui->tableView->horizontalHeader()->hide();
+    //-- Serial Port --
+    connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
+
+    //-- Table View --
+    ui->tableView->setModel(model);
+    ui->tableView->setShowGrid(false);
+    ui->tableView->setWordWrap(true);
+    ui->tableView->setColumnHidden(0,true);
+    ui->tableView->setColumnHidden(2,true);
+    ui->tableView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+    ui->tableView->verticalHeader()->hide();
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView->scrollToTop();
+
+    connect(ui->checkBoxTime, &QCheckBox::stateChanged, this, [&](int state){
+        ui->tableView->setColumnHidden(0, !static_cast<bool>(state));
+        if(state == Qt::Checked)
+            ui->tableView->resizeColumnToContents(0);
+    });
+    connect(ui->checkBoxHex, &QCheckBox::stateChanged, this, [&](int state){
+        ui->tableView->setColumnHidden(2, !static_cast<bool>(state));
+        static bool firstUse = true;
+        if(firstUse && state == Qt::Checked)
+        {
+            int size = (ui->tableView->columnWidth(1) + ui->tableView->columnWidth(2))/2;
+            ui->tableView->setColumnWidth(1,size);
+            ui->tableView->setColumnWidth(2,size);
+            firstUse = false;
+        }
+    });
 
     updatePortInfo();
     initMetaEnum();
+    ui->comboBoxTypeSend->addItems(QStringList() << "Text" << "Hex");
+    ui->debugInfo->setText("Close");
 }
 
 SerialWidget::~SerialWidget()
 {
-    qDebug() << "Destructor:  " << (uint64_t)this;
     delete ui;
     delete model;
 }
@@ -109,9 +119,13 @@ void SerialWidget::updatePortInfo()
         QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
         for(QSerialPortInfo info : list)
         {
-            qDebug() << info.description() << info.portName() << info.systemLocation();
-            keys.removeAll(info.portName());
-            portInfoMap[info.portName()] = info;
+            QString key = info.portName();
+            if(!info.description().isEmpty())
+            {
+                key += QString(" [%0]").arg(info.description());
+            }
+            keys.removeAll(key);
+            portInfoMap[key] = info;
         }
         portInfoMap.removeIf([&keys](QMap<QString, QSerialPortInfo>::iterator i){return keys.contains(i.key());});
         ui->comboBoxPort->addItems(portInfoMap.keys());
@@ -145,9 +159,36 @@ QPushButton *SerialWidget::getMinusButton()
 
 void SerialWidget::read()
 {
-    //QByteArray ba = serialPort.readAll();
-    if(!ui->lineEditSend->text().isEmpty())
+    QByteArray ba = serialPort.readAll();
+    if(!ba.isEmpty())
     {
-        model->addSerialData(QDateTime::currentDateTime(), ui->lineEditSend->text().toUtf8());
+        model->addSerialData(ba);
+    }
+    if(ui->checkBoxAutoScroll->checkState())
+    {
+        ui->tableView->scrollToBottom();
+    }
+}
+
+void SerialWidget::write()
+{
+    QString str = ui->lineEditSend->text();
+    if(!serialPort.isOpen())
+    {
+        ui->debugInfo->setText(QString("Port is not open"));
+        return;
+    }
+    if(!str.isEmpty())
+    {
+        QByteArray ba;
+        switch (ui->comboBoxTypeSend->currentIndex()) {
+        case Text:
+            ba = str.toUtf8();
+            break;
+        case Hex:
+            ba = QByteArray::fromHex(str.toUtf8());
+            break;
+        }
+        serialPort.write(ba);
     }
 }

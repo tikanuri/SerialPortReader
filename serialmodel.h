@@ -40,8 +40,11 @@ public:
     bool hasChildren(const QModelIndex &parent) const override;
 
     //Custom
-public slots:
     void addSerialData(const QDateTime &dt, const QByteArray & ba);
+    inline void addSerialData(const QByteArray &ba){ addSerialData(QDateTime::currentDateTime(),ba); }
+    QModelIndex lastIndex();
+
+public slots:
     void clearSerialData();
 };
 

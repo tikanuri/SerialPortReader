@@ -18,6 +18,12 @@ class SerialWidget;
 class SerialWidget : public QWidget
 {
     Q_OBJECT
+private:
+    enum SendType
+    {
+        Text,
+        Hex
+    };
 
 public:
     explicit SerialWidget(bool visibleMinusButton, QWidget *parent = nullptr);
@@ -29,6 +35,7 @@ public slots:
     void changeState();
     void updatePortInfo();
     void read();
+    void write();
 
 signals:
     void clickedPlus();
@@ -39,7 +46,6 @@ private:
 
 private:
     Ui::SerialWidget *ui;
-    SerialView *view;
     SerialModel *model;
     QSerialPort serialPort;
     ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;

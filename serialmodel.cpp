@@ -5,11 +5,6 @@
 SerialModel::SerialModel(QObject *parent)
     : QAbstractItemModel{parent}
 {
-    SerialData a{
-        .dateTime = QDateTime::currentDateTime(),
-        .byteArray = QByteArray("Test constructor model\r\n 2 string")
-    };
-    listData.append(a);
 }
 
 int SerialModel::columnCount(const QModelIndex &parent) const
@@ -26,10 +21,6 @@ int SerialModel::rowCount(const QModelIndex &parent) const
 
 QVariant SerialModel::data(const QModelIndex &index, int role) const
 {
-    if(index.row() >= listData.length())
-    {
-        qDebug() << "Row: " << index.row();
-    }
 
     if( !index.isValid() || index.row()>=listData.length() )
     {
@@ -37,20 +28,15 @@ QVariant SerialModel::data(const QModelIndex &index, int role) const
     }
 
     const SerialData &d = listData.at(index.row());
-    QString str(d.byteArray);
-
     switch (role) {
     case Qt::DisplayRole:
         switch (index.column()) {
         case 0:
             return d.dateTime.toString("dd.MM hh:mm:ss:zzz");
-
         case 1:
             return QString(d.byteArray);
-
         case 2:
             return QString(d.byteArray.toHex(' '));
-
         default:
             break;
         }
@@ -77,7 +63,7 @@ QVariant SerialModel::headerData(int section, Qt::Orientation orientation, int r
 {
     if(role == Qt::DisplayRole)
     {
-        switch (orientation) {
+        switch (orientation){
         case Qt::Horizontal:
             switch(section) {
             case 0:
@@ -89,7 +75,7 @@ QVariant SerialModel::headerData(int section, Qt::Orientation orientation, int r
             }
             break;
         case Qt::Vertical:
-            return QString("Row %0").arg(section);
+            return QString("%0").arg(section);
         }
     }
     return QVariant();
@@ -123,6 +109,15 @@ void SerialModel::addSerialData(const QDateTime &dt, const QByteArray &ba)
     this->beginInsertRows(QModelIndex(),l,l);
     listData.append({dt,ba});
     this->endInsertRows();
+}
+
+QModelIndex SerialModel::lastIndex()
+{
+    const int row = listData.length()-1;
+    if(row >= 0)
+        return createIndex(row,0,&listData[row]);
+    else
+        return QModelIndex();
 }
 
 void SerialModel::clearSerialData()
