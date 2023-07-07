@@ -6,230 +6,211 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>636</width>
-    <height>346</height>
+    <width>486</width>
+    <height>452</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QGridLayout" name="gridLayout_0">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Port:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBoxPort">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Baudrate:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBoxBaudrate">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="editable">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Stop bits:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QComboBox" name="comboBoxStop">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Bits:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="comboBoxBits">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Parity:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QComboBox" name="comboBoxParity">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <layout class="QHBoxLayout" name="horizontalLayoutButton">
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonMinus">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>16777215</height>
-          </size>
-         </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="tabSwitchInterface">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabSerialPort">
+      <attribute name="title">
+       <string>Serial Port</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>-</string>
+          <string>Baudrate:</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonPlus">
-         <property name="enabled">
-          <bool>true</bool>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Port:</string>
          </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="comboBoxPort">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>25</width>
-           <height>16777215</height>
-          </size>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBoxBaudrate">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>+</string>
+          <string>Bits:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="comboBoxBits">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Stop bits:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="5">
+        <widget class="QComboBox" name="comboBoxStop">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Parity:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="5">
+        <widget class="QComboBox" name="comboBoxParity">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
         </widget>
        </item>
       </layout>
-     </item>
-    </layout>
+     </widget>
+     <widget class="QWidget" name="tabTcpClient">
+      <attribute name="title">
+       <string>TCP Client</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Host:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEditHost"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Port:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEditPort"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
-   <item>
-    <layout class="QGridLayout" name="gridLayout_1">
-     <item row="1" column="2">
-      <widget class="QCheckBox" name="checkBoxHdlc">
-       <property name="text">
-        <string>HDLC</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="6">
-      <widget class="QPushButton" name="pushButtonClear">
-       <property name="text">
-        <string>Clear</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="5">
-      <widget class="QPushButton" name="pushButtonStart">
-       <property name="text">
-        <string>Start</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="checkBoxTime">
-       <property name="text">
-        <string>Time</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QCheckBox" name="checkBoxHex">
-       <property name="text">
-        <string>Hex</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="1" column="3">
-      <widget class="QCheckBox" name="checkBoxAutoScroll">
-       <property name="text">
-        <string>AutoScroll</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
+   <item row="3" column="0">
     <widget class="QTableView" name="tableView"/>
    </item>
-   <item>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayoutButton">
+     <item>
+      <widget class="QLabel" name="debugInfo">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonMinus">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonPlus">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>25</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLineEdit" name="lineEditSend"/>
@@ -246,12 +227,60 @@
      </item>
     </layout>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="debugInfo">
+      <widget class="QCheckBox" name="checkBoxTime">
        <property name="text">
-        <string/>
+        <string>Time</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxHex">
+       <property name="text">
+        <string>Hex</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxHdlc">
+       <property name="text">
+        <string>HDLC</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxAutoScroll">
+       <property name="text">
+        <string>AutoScroll</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonStart">
+       <property name="text">
+        <string>Start</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonClear">
+       <property name="text">
+        <string>Clear</string>
        </property>
       </widget>
      </item>
