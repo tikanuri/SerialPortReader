@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QTcpSocket>
 #include <QMap>
 #include <QMetaEnum>
 #include <QPushButton>
@@ -36,6 +37,8 @@ public slots:
     void updatePortInfo();
     void read();
     void write();
+    void connectedTcpSocket();
+    void tcpSocketError(QAbstractSocket::SocketError socketError);
 
 signals:
     void clickedPlus();
@@ -48,6 +51,7 @@ private:
     Ui::SerialWidget *ui;
     SerialModel *model;
     QSerialPort serialPort;
+    QTcpSocket tcpSocket;
     ComboBoxUpdateEventFilter comboBoxUpdateEventFilter;
     QMap<QString,QSerialPortInfo> portInfoMap;
     QMetaEnum enumBaudrate;

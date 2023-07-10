@@ -7,6 +7,7 @@ SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
     ui(new Ui::SerialWidget),
     model(new SerialModel(this)),
     serialPort(this),
+    tcpSocket(this),
     comboBoxUpdateEventFilter(this),
     portInfoMap()
 {
@@ -27,6 +28,11 @@ SerialWidget::SerialWidget(bool visibleMinusButton, QWidget *parent) :
 
     //-- Serial Port --
     connect(&serialPort, &QSerialPort::readyRead, this, &SerialWidget::read);
+
+    //-- TCP Socket --
+    connect(&tcpSocket, &QTcpSocket::connected, this, &SerialWidget::connectedTcpSocket);
+    connect(&tcpSocket, &QTcpSocket::errorOccurred, this, &SerialWidget::tcpSocketError);
+    connect(&tcpSocket, &QTcpSocket::readyRead, this, &SerialWidget::read);
 
     //-- Table View --
     ui->tableView->setModel(model);
@@ -73,39 +79,63 @@ SerialWidget::~SerialWidget()
 
 void SerialWidget::changeState()
 {
-    if(serialPort.isOpen())
-    {
-        serialPort.close();
-        ui->pushButtonStart->setText("Start");
-        ui->debugInfo->setText(QString("Close"));
-        ui->comboBoxPort->setEnabled(true);
-    }
-    else
-    {
-        serialPort.setPort(portInfoMap[ui->comboBoxPort->currentText()]);
-        serialPort.setBaudRate(ui->comboBoxBaudrate->currentText().toInt());
-        QSerialPort::DataBits dbits = comboBoxToEnum<QSerialPort::DataBits>(ui->comboBoxBits,enumDataBits);
-        QSerialPort::StopBits sbits = comboBoxToEnum<QSerialPort::StopBits>(ui->comboBoxStop,enumStopBits);
-        QSerialPort::Parity parity = comboBoxToEnum<QSerialPort::Parity>(ui->comboBoxParity,enumParity);
-        serialPort.setDataBits(dbits);
-        serialPort.setStopBits(sbits);
-        serialPort.setParity(parity);
-        if(serialPort.open(QIODeviceBase::ReadWrite))
+    switch (ui->tabSwitchInterface->currentIndex()) {
+    case 0:
+        if(serialPort.isOpen())
         {
-            ui->pushButtonStart->setText("Stop");
-            ui->debugInfo->setText(QString("Open: %0 %1; %2 %3 %4")
-                                   .arg(ui->comboBoxPort->currentText())
-                                   .arg(ui->comboBoxBaudrate->currentText())
-                                   .arg(dbits)
-                                   .arg(enumParity.valueToKey(parity))
-                                   .arg(sbits)
-                                    );
-            ui->comboBoxPort->setEnabled(false);
+            serialPort.close();
+            ui->pushButtonStart->setText("Start");
+            ui->debugInfo->setText(QString("Close serial port"));
+            ui->comboBoxPort->setEnabled(true);
+            ui->tabSwitchInterface->setTabEnabled(1,true);
         }
         else
         {
-            ui->debugInfo->setText(QString("Can`t be opened"));
+            serialPort.setPort(portInfoMap[ui->comboBoxPort->currentText()]);
+            serialPort.setBaudRate(ui->comboBoxBaudrate->currentText().toInt());
+            QSerialPort::DataBits dbits = comboBoxToEnum<QSerialPort::DataBits>(ui->comboBoxBits,enumDataBits);
+            QSerialPort::StopBits sbits = comboBoxToEnum<QSerialPort::StopBits>(ui->comboBoxStop,enumStopBits);
+            QSerialPort::Parity parity = comboBoxToEnum<QSerialPort::Parity>(ui->comboBoxParity,enumParity);
+            serialPort.setDataBits(dbits);
+            serialPort.setStopBits(sbits);
+            serialPort.setParity(parity);
+            if(serialPort.open(QIODeviceBase::ReadWrite))
+            {
+                ui->pushButtonStart->setText("Stop");
+                ui->debugInfo->setText(QString("Open: %0 %1; %2 %3 %4")
+                                       .arg(ui->comboBoxPort->currentText())
+                                       .arg(ui->comboBoxBaudrate->currentText())
+                                       .arg(dbits)
+                                       .arg(enumParity.valueToKey(parity))
+                                       .arg(sbits)
+                                        );
+                ui->comboBoxPort->setEnabled(false);
+                ui->tabSwitchInterface->setTabEnabled(1,false);
+            }
+            else
+            {
+                ui->debugInfo->setText(QString("Can`t be opened"));
+            }
         }
+        break;
+    case 1:
+        if(tcpSocket.isOpen())
+        {
+            tcpSocket.close();
+            ui->pushButtonStart->setText("Start");
+            ui->debugInfo->setText(QString("Close tcp socket"));
+            ui->tabSwitchInterface->setTabEnabled(0,true);
+        }
+        else
+        {
+            tcpSocket.connectToHost(ui->lineEditHost->text(),ui->lineEditPort->text().toUShort());
+            ui->pushButtonStart->setText("Stop");
+            ui->debugInfo->setText(QString("Connecting to server..."));
+            ui->tabSwitchInterface->setTabEnabled(0,false);
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -159,7 +189,17 @@ QPushButton *SerialWidget::getMinusButton()
 
 void SerialWidget::read()
 {
-    QByteArray ba = serialPort.readAll();
+    QByteArray ba;
+    switch (ui->tabSwitchInterface->currentIndex()) {
+    case 0:
+        ba = serialPort.readAll();
+        break;
+    case 1:
+        ba = tcpSocket.readAll();
+    default:
+        break;
+    }
+
     if(!ba.isEmpty())
     {
         model->addSerialData(ba);
@@ -173,15 +213,11 @@ void SerialWidget::read()
 void SerialWidget::write()
 {
     QString str = ui->lineEditSend->text();
-    if(!serialPort.isOpen())
-    {
-        ui->debugInfo->setText(QString("Port is not open"));
-        return;
-    }
     if(!str.isEmpty())
     {
         QByteArray ba;
-        switch (ui->comboBoxTypeSend->currentIndex()) {
+        switch (ui->comboBoxTypeSend->currentIndex())
+        {
         case Text:
             ba = str.toUtf8();
             break;
@@ -189,6 +225,48 @@ void SerialWidget::write()
             ba = QByteArray::fromHex(str.toUtf8());
             break;
         }
-        serialPort.write(ba);
+
+
+        switch (ui->tabSwitchInterface->currentIndex())
+        {
+        case 0:
+            if(!serialPort.isOpen())
+            {
+                ui->debugInfo->setText(QString("Port is not open"));
+                return;
+            }
+            serialPort.write(ba);
+            break;
+        case 1:
+            if(!tcpSocket.isOpen())
+            {
+                ui->debugInfo->setText(QString("Socket is not open"));
+                return;
+            }
+            tcpSocket.write(ba);
+            break;
+
+        default:
+            break;
+        }
     }
+
+
+}
+
+void SerialWidget::connectedTcpSocket()
+{
+    ui->debugInfo->setText(QString("Connected to %1:%2")
+                            .arg(tcpSocket.peerAddress().toString())
+                            .arg(tcpSocket.peerPort()));
+}
+
+void SerialWidget::tcpSocketError(QAbstractSocket::SocketError socketError)
+{
+    //Q_UNUSED(socketError);
+    tcpSocket.close();
+    ui->pushButtonStart->setText("Start");
+    ui->debugInfo->setText(QString("Tcp socket error: %1").arg(socketError));
+    ui->tabSwitchInterface->setTabEnabled(0,true);
+
 }
